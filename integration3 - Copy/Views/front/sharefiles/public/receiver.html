@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Receive Files Securely</title>
+  <link rel="shortcut icon" href=".../../imgggg.png" />
+  <script src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js" type="module"></script>
+  <meta name="author" content="Untree.co">
+  <meta name="description" content="Receive files securely" />
+  <meta name="keywords" content="file transfer, secure sharing" />
+  <link href="https://fonts.googleapis.com/css2?family=Display+Playfair:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #4cc9f0;
+      --dark-color: #1a1a2e;
+      --light-color: #f8f9fa;
+      --success-color: #4bb543;
+      --error-color: #ff3333;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    body {
+      overflow-x: hidden;
+      color: var(--dark-color);
+    }
+    
+    /* Spline background with fade-in animation */
+    .spline-viewer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: -1;
+      filter: brightness(0.8);
+      animation: fadeIn 1.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Main app container */
+    .app {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeInUp 1s ease-out;
+    }
+    
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Screen styling */
+    .screen {
+      display: none;
+      width: 100%;
+      max-width: 1200px;
+    }
+    
+    .screen.active {
+      display: block;
+    }
+    
+    /* Join screen styling with 3D effect */
+    .join-screen {
+      text-align: center;
+    }
+    
+    .join-screen .form {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      max-width: 500px;
+      margin: 0 auto;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transform-style: preserve-3d;
+      transform: perspective(1000px);
+      transition: var(--transition);
+    }
+    
+    .join-screen .form:hover {
+      transform: perspective(1000px) translateY(-5px) rotateX(2deg);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+    }
+    
+    .join-screen h2 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+      color: var(--primary-color);
+      font-family: 'Display Playfair', serif;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: textGlow 2s infinite alternate;
+    }
+    
+    @keyframes textGlow {
+      from { text-shadow: 0 0 5px rgba(67, 97, 238, 0.3); }
+      to { text-shadow: 0 0 15px rgba(67, 97, 238, 0.5); }
+    }
+    
+    .form-input {
+      margin-bottom: 25px;
+      text-align: left;
+    }
+    
+    .form-input label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+    
+    .form-input input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: var(--transition);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-input input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      animation: inputPulse 1.5s infinite;
+    }
+    
+    @keyframes inputPulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2), inset 0 1px 3px rgba(0, 0, 0, 0.1); }
+      50% { box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.4), inset 0 1px 3px rgba(0, 0, 0, 0.1); }
+    }
+    
+    /* Button styling with shine effect */
+    #receiver-start-con-btn {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    #receiver-start-con-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.6);
+    }
+    
+    #receiver-start-con-btn:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: translateX(-100%);
+      transition: 0.5s;
+    }
+    
+    #receiver-start-con-btn:hover:after {
+      transform: translateX(100%);
+    }
+    
+    /* File sharing screen */
+    .fs-screen {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.8s 0.3s forwards;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    /* Files list styling with sequential animation */
+    .files-list {
+      margin-top: 20px;
+    }
+    
+    .files-list .title {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      color: var(--primary-color);
+      font-weight: 600;
+      text-align: center;
+      position: relative;
+    }
+    
+    .files-list .title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: var(--primary-color);
+      margin: 10px auto 0;
+      border-radius: 3px;
+      animation: stretch 1.5s ease-out infinite alternate;
+    }
+    
+    @keyframes stretch {
+      from { transform: scaleX(0.8); }
+      to { transform: scaleX(1.2); }
+    }
+    
+    .status-message {
+      text-align: center;
+      margin-top: 20px;
+      font-style: italic;
+      color: #6c757d;
+      animation: fadeIn 1s ease-out;
+    }
+    
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: rgba(248, 249, 250, 0.8);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      transition: var(--transition);
+      border-left: 4px solid var(--primary-color);
+      transform: translateX(-20px);
+      opacity: 0;
+      animation: slideIn 0.5s forwards;
+    }
+    
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .item:hover {
+      transform: translateX(5px) !important;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .progress {
+      font-weight: 600;
+      color: var(--primary-color);
+      min-width: 60px;
+      transition: var(--transition);
+    }
+    
+    .filename {
+      flex-grow: 1;
+      margin-left: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    /* Download complete animation */
+    .download-complete {
+      animation: bounce 0.5s, pulse 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(75, 181, 67, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(75, 181, 67, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(75, 181, 67, 0); }
+    }
+    
+    /* Controller icon styling (as requested) */
+    .controller-icon {
+      position: fixed;
+      margin-bottom: 100px;
+      bottom: 20px;
+      right: 20px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background-color: rgba(0, 123, 255, 0.8);
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .profile-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      padding: 0;
+      color: #fff;
+      font-size: 14px;
+    }
+    
+    .profile-block img {
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border: 2px solid #fff;
+      transition: transform 0.3s ease;
+    }
+    
+    .profile-block img:hover {
+      transform: rotate(15deg) scale(1.1);
+    }
+    
+    .profile-block h2 {
+      font-size: 14px;
+      margin: 0;
+      color: #fff;
+    }
+    
+    .controller-icon a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: rgba(0, 123, 255, 0.8);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+    }
+    
+    .controller-icon a:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .controller-icon a::after {
+      content: attr(title);
+      position: absolute;
+      right: 60px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .controller-icon a:hover::after {
+      opacity: 1;
+    }
+    
+    .controller-icon i {
+      color: #fff;
+      font-size: 24px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .join-screen .form {
+        padding: 30px 20px;
+      }
+      
+      .join-screen h2 {
+        font-size: 1.8rem;
+      }
+      
+      .fs-screen {
+        padding: 20px 15px;
+      }
+    }
+  </style>
+  <style>
+         /* Blue Cubic Cursor System */
+    .cursor {
+        position: fixed;
+        width: 16px;
+        height: 16px;
+        background: #0077ff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: 
+            transform 0.15s ease, 
+            width 0.2s ease, 
+            height 0.2s ease,
+            background 0.2s ease;
+        box-shadow: 0 0 10px rgba(0, 119, 255, 0.7);
+    }
+
+    .cursor-follower {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #00aaff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9998;
+        transition: transform 0.3s ease;
+        box-shadow: 0 0 8px rgba(0, 170, 255, 0.6);
+    }
+
+    .cursor-particle {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #0066cc;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0;
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+    }
+
+    .cursor-ring {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(0, 170, 255, 0.7);
+        transform: translate(-50%, -50%) scale(0) rotate(45deg);
+        pointer-events: none;
+        z-index: 9996;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Interactive states */
+    .cursor-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #00aaff;
+        box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
+    }
+
+    .cursor-follower-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #0077ff;
+    }
+
+    .cursor-click {
+        transform: translate(-50%, -50%) scale(0.8) rotate(45deg);
+        background: #0066cc;
+    }
+
+    /* Hide default cursor */
+    html, body {
+        cursor: none;
+    }
+
+    /* Make sure interactive elements don't show default cursor */
+    a, button, input, [data-cursor] {
+        cursor: none !important;
+    }
+    </style>
+
+</head>
+<body>
+  <div class="app">
+    <div class="screen join-screen active">
+      <div class="form">
+        <h2>Receive files securely</h2>
+        <div class="form-input">
+          <label for="join-id">Enter Room ID</label>
+          <input type="text" id="join-id" placeholder="Paste the share code here">
+        </div>
+        <div class="form-input">
+          <button id="receiver-start-con-btn">
+            <i class="fas fa-plug"></i> Connect to Share Room
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="screen fs-screen">
+      <div class="files-list">
+        <div class="title">Incoming Files</div>
+        <div class="status-message">Waiting for files from sender...</div>
+      </div>  
+    </div>
+  </div>
+  
+  <div class="controller-icon">
+    <div class="profile-block">
+      <a href="../loading_screen/laoding_modif.html"><img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture"></a>
+    </div>
+    <a href="games.html" title="Play Game">
+      <i class="fas fa-gamepad"></i>
+    </a>
+    <a href="../ghub/gilo.html" title="GitHub">
+      <i class="fab fa-github"></i>
+    </a>
+    <a href="../Ai/loding3.html" title="AI Chat">
+      <i class="fas fa-robot"></i>
+    </a>
+    <a href="../loading_screen/loading_editor.html" title="Code Editor">
+      <i class="fas fa-code"></i>
+    </a>
+    <a href="../media/media.html" title="Social Media">
+      <i class="fas fa-users"></i>
+    </a>
+    <a href="../loading_screen/loading_main.html" title="main_page">
+      <i class="fas fa-chalkboard"></i>
+    </a>
+  </div>
+  
+  <div class="spline-viewer">
+    <spline-viewer url="https://prod.spline.design/BK83Flm76SwRJlHz/scene.splinecode"></spline-viewer>
+  </div>
+  
+  <script type="text/javascript" src="socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.1/download.min.js"></script>
+  <script type="text/javascript" src="receiver.js"></script>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.35/build/spline-viewer.js"></script>
+  <script>
+    window.onload = function() {
+      const shadowRoot = document.querySelector('spline-viewer').shadowRoot;
+      if (shadowRoot) {
+        const logo = shadowRoot.querySelector('#logo');
+        if (logo) logo.remove();
+      }
+      
+      // Add ripple effect to buttons
+      const buttons = document.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          const x = e.clientX - e.target.getBoundingClientRect().left;
+          const y = e.clientY - e.target.getBoundingClientRect().top;
+          const ripple = document.createElement('span');
+          
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          ripple.classList.add('ripple');
+          
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 1000);
+        });
+      });
+      
+      // Animation for when files are received
+      socket.on("fs-meta", function() {
+        const statusMsg = document.querySelector('.status-message');
+        if (statusMsg) {
+          statusMsg.textContent = "Receiving files...";
+          statusMsg.style.fontWeight = "600";
+          statusMsg.style.animation = "none";
+          void statusMsg.offsetWidth; // Trigger reflow
+          statusMsg.style.animation = "pulse 1.5s infinite";
+        }
+      });
+    };
+    
+    // Add animation to downloaded files
+    function download(blob, filename) {
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      
+      // Find the corresponding file item
+      const items = document.querySelectorAll('.item');
+      const lastItem = items[items.length - 1];
+      
+      if (lastItem) {
+        lastItem.classList.add('download-complete');
+        lastItem.style.borderLeftColor = "var(--success-color)";
+        
+        // Update status message
+        const statusMsg = document.querySelector('.status-message');
+        if (statusMsg) {
+          statusMsg.textContent = "File received successfully!";
+          statusMsg.style.color = "var(--success-color)";
+          statusMsg.style.animation = "none";
+        }
+      }
+      
+      link.click();
+    }
+  </script>
+  <style>
+    .ripple {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple 0.6s linear;
+      pointer-events: none;
+    }
+    
+    @keyframes ripple {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+  </style><div class="cursor"></div>
+  <div class="cursor-follower"></div>
+  <div class="cursor-ring"></div>
+
+  <div class="site-mobile-menu">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div> 
+
+
+<script>
+    // Initialize the cubic cursor
+    function initCursor() {
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+        const ring = document.querySelector('.cursor-ring');
+        const interactiveElements = document.querySelectorAll('a, button, input, .controller-icon a, .profile-block a, .site-menu li a, .btn-secondary');
+        
+        let mouseX = 0, mouseY = 0;
+        let posX = 0, posY = 0;
+        let particleCount = 0;
+        const maxParticles = 15;
+        
+        // Mouse move event
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Position main cursor immediately
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            
+            // Create trailing cube particles
+            if (particleCount < maxParticles && Math.random() > 0.3) {
+                createCubeParticle(mouseX, mouseY);
+                particleCount++;
+            }
+        });
+        
+        // Animate follower with delay
+        function animate() {
+            // Smooth follower movement
+            posX += (mouseX - posX) / 6;
+            posY += (mouseY - posY) / 6;
+            
+            follower.style.left = posX + 'px';
+            follower.style.top = posY + 'px';
+            
+            // Ring follows with more delay
+            ring.style.left = posX + 'px';
+            ring.style.top = posY + 'px';
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Create cube particle effect
+        function createCubeParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'cursor-particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+            
+            // Randomize blue shade
+            const blues = ['#0077ff', '#00aaff', '#0066cc', '#0099ff'];
+            const color = blues[Math.floor(Math.random() * blues.length)];
+            particle.style.background = color;
+            particle.style.boxShadow = `0 0 5px ${color}`;
+            
+            // Animate particle
+            let size = Math.random() * 6 + 4;
+            let life = Math.random() * 1000 + 500;
+            let angle = Math.random() * Math.PI * 2;
+            let speed = Math.random() * 2 + 1;
+            let rotation = Math.random() * 360;
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.opacity = '0.9';
+            
+            let startTime = Date.now();
+            
+            function updateParticle() {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / life;
+                
+                if (progress >= 1) {
+                    particle.remove();
+                    particleCount--;
+                    return;
+                }
+                
+                const moveX = Math.cos(angle) * speed * 10 * progress;
+                const moveY = Math.sin(angle) * speed * 10 * progress;
+                rotation += 2;
+                
+                particle.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotation}deg)`;
+                particle.style.opacity = 0.9 * (1 - progress);
+                
+                requestAnimationFrame(updateParticle);
+            }
+            
+            requestAnimationFrame(updateParticle);
+        }
+        
+        // Hover effects
+        interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.classList.add('cursor-active');
+                follower.classList.add('cursor-follower-active');
+                ring.style.transform = 'translate(-50%, -50%) scale(1) rotate(45deg)';
+                ring.style.opacity = '0.7';
+                
+                // Create hover particles
+                for (let i = 0; i < 3; i++) {
+                    createCubeParticle(mouseX, mouseY);
+                }
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.classList.remove('cursor-active');
+                follower.classList.remove('cursor-follower-active');
+                ring.style.transform = 'translate(-50%, -50%) scale(0) rotate(45deg)';
+                ring.style.opacity = '0';
+            });
+        });
+        
+        // Click effect
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('cursor-click');
+            ring.style.transform = 'translate(-50%, -50%) scale(1.5) rotate(45deg)';
+            ring.style.opacity = '0';
+            ring.style.borderColor = '#0077ff';
+            
+            // Create click cubes
+            for (let i = 0; i < 8; i++) {
+                createCubeParticle(mouseX, mouseY);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('cursor-click');
+        });
+    }
+
+    // Initialize cursor when page loads
+    window.onload = function() {
+        initCursor();
+        
+        const shadowRoot = document.querySelector('spline-viewer').shadowRoot;
+        if (shadowRoot) {
+            const logo = shadowRoot.querySelector('#logo');
+            if (logo) logo.remove();
+        }
+    }
+
+    function confirmLogout() {
+        return confirm('Are you sure you want to leave the website?');
+    }
+  </script>
+
+</body>
+</html>

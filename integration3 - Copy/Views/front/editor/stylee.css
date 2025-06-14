@@ -1,0 +1,221 @@
+/* stylee.css - Modern Code Editor Styles */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto:wght@400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    color: #e0e0e0;
+}
+
+/* Spline Viewer Background */
+.spline-viewer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.7;
+}
+
+.spline-viewer spline-viewer {
+    width: 100%;
+    height: 100%;
+}
+
+/* Main Editor Container */
+
+
+/* Editor Textarea (Left Box - 40%) */
+#editor-textarea {
+    width: 40%;
+    height: 100%;
+    padding: 50px 20px 20px 45px;
+    background: rgba(20, 20, 30, 0.85);
+    color: #e0e0e0;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    border: none;
+    resize: none;
+    outline: none;
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    background-image: linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 30px 100%;
+}
+
+#editor-textarea:focus {
+    background: rgba(15, 15, 25, 0.9);
+}
+
+/* Viewer Iframe (Right Box - 60%) */
+#viewer {
+    width: 60%;
+    height: 100%;
+    border: none;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+/* Editor Toolbar */
+.editor-toolbar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    gap: 8px;
+}
+
+/* Fullscreen Button */
+.editor-fullscreen {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.editor-fullscreen::before {
+    content: "⛶";
+    font-size: 16px;
+}
+
+.editor-fullscreen:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #5a7df4, #9b59b6);
+}
+
+.editor-fullscreen:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar Styling */
+#editor-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+#editor-textarea::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+#editor-textarea::-webkit-scrollbar-thumb {
+    background: linear-gradient(#6e8efb, #a777e3);
+    border-radius: 10px;
+}
+
+/* Placeholder Styling */
+#editor-textarea::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+    font-style: italic;
+    font-family: 'Fira Code', monospace;
+}
+
+/* Navigation Links */
+.site-nav .site-menu a {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #e0e0e0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+    position: relative;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    margin: 0 2px;
+}
+
+.site-nav .site-menu a:hover {
+    color: white;
+    background: linear-gradient(135deg, rgba(110, 142, 251, 0.8), rgba(167, 119, 227, 0.8));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.site-nav .site-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: width 0.3s ease;
+}
+
+.site-nav .site-menu a:hover::after {
+    width: 70%;
+}
+
+/* Fullscreen Mode Enhancements */
+:fullscreen #viewer {
+    width: 100vw;
+    height: 100vh;
+    background: white;
+}
+
+:fullscreen::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) {
+    .main {
+        width: 95%;
+        height: 90%;
+    }
+    
+    #editor-textarea {
+        width: 45%;
+    }
+    
+    #viewer {
+        width: 55%;
+    }
+}
+
+@media (max-width: 768px) {
+    .main {
+        flex-direction: column;
+    }
+    
+    #editor-textarea, #viewer {
+        width: 100%;
+        height: 50%;
+    }
+    
+    .editor-toolbar {
+        top: 5px;
+        right: 5px;
+    }
+}

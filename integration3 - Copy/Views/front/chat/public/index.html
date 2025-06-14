@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatroom</title>
+    <link rel="stylesheet" href="style.css" />
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="../../imggg.png" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Display+Playfair:wght@400;700&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <link rel="stylesheet" href="../../main/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../main/css/animate.min.css" />
+    <link rel="stylesheet" href="../../main/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="../../main/css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="flaticon.css" />
+    <link rel="stylesheet" href="../../main/style.css" />
+    <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css" />
+    <link rel="stylesheet" href="../../main/css/aos.css" />
+    <link rel="stylesheet" href="../../main/css/style.css" />
+    <link rel="stylesheet" href="../../main/css/stylo.css" />
+
+    <script
+      src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"
+      type="module"
+    ></script>
+    <meta name="author" content="Untree.co" />
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Display+Playfair:wght@400;700&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+
+    <link rel="stylesheet" href="main/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="main/css/animate.min.css" />
+    <link rel="stylesheet" href="main/css/owl.carousel.min.css" />
+    <link rel="stylesheet" href="main/css/owl.theme.default.min.css" />
+    <link rel="stylesheet" href="flaticon.css" />
+    <link rel="stylesheet" href="main/style.css" />
+    <link rel="stylesheet" href="../fonts/flaticon/font/flaticon.css" />
+    <link rel="stylesheet" href="main/css/aos.css" />
+    <link rel="stylesheet" href="main/css/style.css" />
+    <link rel="stylesheet" href="main/css/stylo.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <meta name="author" content="Untree.co" />
+    <link rel="shortcut icon" href="imgggg.png" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Display+Playfair:wght@400;700&family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: "Inter", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background: transparent;
+      }
+
+      .spline-viewer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 1;
+      }
+
+      .screen {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        background: rgba(20, 20, 35, 0.7); /* More transparent */
+        backdrop-filter: blur(10px); /* Reduced blur */
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        max-width: 90%;
+        max-height: 85%;
+        animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translate(-50%, -60%);
+        }
+        to {
+          opacity: 1;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      .chat-screen,
+      .join-screen {
+        display: none;
+      }
+
+      .chat-screen.active,
+      .join-screen.active {
+        display: block;
+      }
+
+      /* Join Screen Styling */
+      .join-screen {
+        width: 450px;
+        text-align: center;
+      }
+
+      .join-screen h2 {
+        color: #fff;
+        font-size: 2.2rem;
+        margin-bottom: 30px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+      }
+
+      .form-input {
+        margin-bottom: 25px;
+      }
+
+      .form-input label {
+        display: block;
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        text-align: left;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      .form-input input {
+        width: 100%;
+        padding: 15px 20px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        border-radius: 15px;
+        color: #fff;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+      }
+
+      .form-input input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .form-input input::placeholder {
+        color: rgb(255, 255, 255);
+      }
+
+      .error-message {
+        color: #ff9e9e;
+        font-size: 0.85rem;
+        margin-top: 5px;
+        text-align: left;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Chat Screen Styling */
+      .chat-screen {
+        width: 600px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.7) 0%,
+          rgba(118, 75, 162, 0.7) 100%
+        );
+        padding: 20px;
+        border-radius: 15px 15px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: rgba(255, 255, 255, 0.05);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+      }
+
+      .messages::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .messages::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .messages::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+      }
+
+      .update {
+        padding: 10px 20px;
+        background: rgba(255, 255, 255, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 0.9rem;
+        text-align: center;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      }
+
+      .typebox {
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 0 0 15px 15px;
+        gap: 10px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      #message-input {
+        flex: 1;
+        padding: 12px 18px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgb(255, 255, 255);
+        border-radius: 25px;
+        color: #fff;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      #message-input:focus {
+        outline: none;
+        border-color: #667eea;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+      }
+
+      #message-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+      }
+
+      .typebox button {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.8) 0%,
+          rgba(118, 75, 162, 0.8) 100%
+        );
+        color: #fff;
+        border: none;
+        padding: 12px 15px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        min-width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .typebox button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(
+          135deg,
+          rgba(118, 75, 162, 0.8) 0%,
+          rgba(102, 126, 234, 0.8) 100%
+        );
+      }
+
+      /* Custom file upload styling */
+      .custom-file-upload {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+
+      .custom-file-upload input[type="file"] {
+        position: absolute;
+        left: -9999px;
+      }
+
+      .custom-file-upload label {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.8) 0%,
+          rgba(118, 75, 162, 0.8) 100%
+        );
+        color: #fff;
+        border: none;
+        padding: 12px 15px;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        min-width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .custom-file-upload label:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(
+          135deg,
+          rgba(118, 75, 162, 0.8) 0%,
+          rgba(102, 126, 234, 0.8) 100%
+        );
+      }
+
+      /* GIF Search Styling */
+      .gif-results {
+        display: none;
+        position: absolute;
+        bottom: 70px;
+        right: 20px;
+        background: rgba(20, 20, 35, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 300px;
+        z-index: 10;
+      }
+
+      .gif-results input {
+        width: 100%;
+        padding: 12px 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        color: #fff;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+      }
+
+      .gif-results input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
+      }
+
+      .gif-results button {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.8) 0%,
+          rgba(118, 75, 162, 0.8) 100%
+        );
+        color: #fff;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      /* Emoji Picker Styling */
+      .emoji-picker {
+        display: none;
+        position: absolute;
+        bottom: 70px;
+        left: 20px;
+        background: rgba(20, 20, 35, 0.85);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        z-index: 10;
+      }
+
+      .emoji-picker span {
+        font-size: 24px;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+        color: #fff;
+      }
+
+      .emoji-picker span:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.2);
+      }
+
+      /* Main Button Styling */
+      button {
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.8) 0%,
+          rgba(118, 75, 162, 0.8) 100%
+        );
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(5px);
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        background: linear-gradient(
+          135deg,
+          rgba(118, 75, 162, 0.8) 0%,
+          rgba(102, 126, 234, 0.8) 100%
+        );
+      }
+
+      button:active {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .screen {
+          max-width: 95%;
+          max-height: 90%;
+          padding: 20px;
+        }
+
+        .join-screen {
+          width: 90%;
+        }
+
+        .chat-screen {
+          width: 90%;
+          height: 70vh;
+        }
+
+        .typebox {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        .typebox button {
+          min-width: 40px;
+          height: 40px;
+          font-size: 14px;
+        }
+      }
+
+      /* Navigation Styling */
+      .site-navigation {
+        background: linear-gradient(
+          135deg,
+          rgba(29, 53, 87, 0.8) 0%,
+          rgba(69, 123, 157, 0.8) 100%
+        );
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        position: fixed;
+        top: 0;
+        margin: 0px;
+        left: 0;
+        display: flex;
+        justify-content: space-between !important;
+        padding: 0px;
+        width: 100%;
+        height: 10%;
+        z-index: 1000;
+        font-family: "Inter", sans-serif;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 25px;
+        padding-left: 50px;
+      }
+
+      .site-navigation ul {
+        padding-left: 180px;
+      }
+
+      .syncaura-logo {
+        position: absolute;
+        top: 5px;
+        z-index: 1001;
+        font-size: 1.5rem;
+        margin-top: 15px;
+        color: #fff;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .user-info {
+        position: absolute;
+        right: 30px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .logout-btn {
+        display: inline-block;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 107, 107, 0.8),
+          rgba(238, 90, 82, 0.8)
+        );
+        padding: 12px 28px;
+        font-size: 16px;
+        color: #fff;
+        border-radius: 25px;
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin: 0;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        backdrop-filter: blur(5px);
+      }
+
+      .logout-btn:hover {
+        background: linear-gradient(
+          45deg,
+          rgba(238, 90, 82, 0.8),
+          rgba(255, 107, 107, 0.8)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+      }
+
+      .username {
+        font-size: 18px;
+        color: #fff;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+        margin-bottom: 0;
+        font-weight: 600;
+      }
+
+      .controller-icon {
+        position: fixed;
+        margin-bottom: 100px;
+        bottom: 20px;
+        right: 20px;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: rgba(20, 20, 35, 0.8);
+        backdrop-filter: blur(10px);
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .controller-icon:hover {
+        transform: translateY(-5px);
+      }
+
+      .profile-block {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: transparent;
+        padding: 0;
+        color: #fff;
+        font-size: 14px;
+      }
+
+      .profile-block img {
+        border-radius: 50%;
+        width: 45px;
+        height: 45px;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+      }
+
+      .profile-block img:hover {
+        border-color: #667eea;
+        box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+      }
+
+      .profile-block h2 {
+        font-size: 14px;
+        margin: 0;
+        color: #fff;
+      }
+
+      .controller-icon a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 55px;
+        height: 55px;
+        border-radius: 15px;
+        background: linear-gradient(
+          135deg,
+          rgba(102, 126, 234, 0.8) 0%,
+          rgba(118, 75, 162, 0.8) 100%
+        );
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(5px);
+      }
+
+      .controller-icon a::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .controller-icon a:hover::before {
+        left: 100%;
+      }
+
+      .controller-icon a:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        background: linear-gradient(
+          135deg,
+          rgba(118, 75, 162, 0.8) 0%,
+          rgba(102, 126, 234, 0.8) 100%
+        );
+      }
+
+      .controller-icon i {
+        color: #fff;
+        font-size: 24px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+
+    <style>
+      /* Blue Cubic Cursor System */
+      .cursor {
+        position: fixed;
+        width: 16px;
+        height: 16px;
+        background: #0077ff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease,
+          background 0.2s ease;
+        box-shadow: 0 0 10px rgba(0, 119, 255, 0.7);
+      }
+
+      .cursor-follower {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #00aaff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9998;
+        transition: transform 0.3s ease;
+        box-shadow: 0 0 8px rgba(0, 170, 255, 0.6);
+      }
+
+      .cursor-particle {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #0066cc;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0;
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+      }
+
+      .cursor-ring {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(0, 170, 255, 0.7);
+        transform: translate(-50%, -50%) scale(0) rotate(45deg);
+        pointer-events: none;
+        z-index: 9996;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+
+      /* Interactive states */
+      .cursor-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #00aaff;
+        box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
+      }
+
+      .cursor-follower-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #0077ff;
+      }
+
+      .cursor-click {
+        transform: translate(-50%, -50%) scale(0.8) rotate(45deg);
+        background: #0066cc;
+      }
+
+      /* Hide default cursor */
+      html,
+      body {
+        cursor: none;
+      }
+
+      /* Make sure interactive elements don't show default cursor */
+      a,
+      button,
+      input,
+      [data-cursor] {
+        cursor: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="site-nav">
+      <div class="container position-relative">
+        <div class="site-navigation">
+          <img
+            src="imggg.png"
+            alt="SyncAura Logo"
+            style="max-height: 50px"
+            class="syncaura-logo"
+          />
+          <ul class="site-menu">
+            <li><a href="../../loading_screen/loading_meet.html">MEET</a></li>
+            <li>
+              <a href="../../loading_screen/loading_p.html">POMODORO TIMER</a>
+            </li>
+            <li><a href="../../loading_screen/loadngg.php">BUY A PACK</a></li>
+            <li><a href="../../todolist/loading_todo.html">To Do List</a></li>
+            <li><a href="../../loading_screen/loadng.html">Chat ROOM</a></li>
+            <li>
+              <a href="../../loading_screen/loading_share.html">Share files</a>
+            </li>
+            <li><a href="../../loading_screen/loading_thome.html">blog</a></li>
+          </ul>
+          <div class="user-info">
+            <a
+              href="sign/signin.php"
+              class="logout-btn"
+              onclick="return confirm('Are you sure you want to leave the website?')"
+              ><i class="fas fa-sign-out-alt"></i> Log Out</a
+            >
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="app">
+      <!-- Join Screen -->
+      <div class="screen join-screen active">
+        <div class="form">
+          <h2>Join Chatroom</h2>
+          <div class="form-input">
+            <label for="chatroom">Chatroom name</label>
+            <input
+              type="text"
+              id="chatroom"
+              name="chatroom"
+              placeholder="Insert chatroom name"
+            />
+            <p id="chatroom-error" class="error-message"></p>
+            <label for="username">Nickname</label>
+            <input
+              type="text"
+              id="username"
+              name="name"
+              placeholder="Insert Cool Nickname"
+            />
+            <p id="username-error" class="error-message"></p>
+          </div>
+          <div class="form-input">
+            <button id="join-user">Join</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Screen -->
+      <div class="screen chat-screen">
+        <div class="header" style="background-color: #0056b3">
+          <div class="logo">Chatroom</div>
+          <button id="exit-chat">Exit</button>
+        </div>
+        <div class="messages">
+          <!-- Messages will be dynamically inserted here -->
+        </div>
+        <div class="update">
+          <!-- System updates (e.g., user joins) will be displayed here -->
+        </div>
+        <div class="typebox">
+          <button id="emoji-btn">😊</button>
+          <!-- Emoji button -->
+          <input
+            id="message-input"
+            type="text"
+            placeholder="Type a message..."
+          />
+          <!-- Input -->
+          <button id="audio">🎙️</button>
+          <!-- Audio button -->
+          <div class="custom-file-upload">
+            <label for="image-upload">📁</label>
+            <input type="file" id="image-upload" accept="image/*" />
+          </div>
+          <button id="send-message">Send</button>
+          <!-- Send button -->
+          <button id="gif-search-icon" class="gif-search-icon">🔍</button>
+          <!-- GIF search -->
+          <!-- GIF search container -->
+          <div id="gif-results" class="gif-results">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="Search for GIFs..."
+            />
+            <button id="search-btn">Search</button>
+            <div id="gif-display"></div>
+            <!-- Area to display selected GIF -->
+          </div>
+        </div>
+
+        <!-- Emoji Picker -->
+        <div class="emoji-picker" id="emoji-picker">
+          <span>😀</span>
+          <span>😁</span>
+          <span>😂</span>
+          <span>😃</span>
+          <span>😄</span>
+          <span>😅</span>
+          <span>😆</span>
+          <span>😉</span>
+          <span>😊</span>
+          <span>😍</span>
+          <span>😋</span>
+          <span>😎</span>
+          <span>😜</span>
+          <span>😝</span>
+          <span>🤩</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="controller-icon">
+      <div class="profile-block">
+        <a href="../../loading_screen/laoding_modif.html"
+          ><img
+            src="<?php echo htmlspecialchars($profile_picture); ?>"
+            alt="Profile Picture"
+        /></a>
+      </div>
+      <a href="../../loading_screen/loading_game.html" title="Play Game">
+        <i class="fas fa-gamepad"></i>
+      </a>
+      <a href="../../ghub/gilo.html" title="GitHub">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="../../Ai/loding3.html" title="AI Chat">
+        <i class="fas fa-robot"></i>
+      </a>
+      <a href="../../loading_screen/loading_editor.html" title="Code Editor">
+        <i class="fas fa-code"></i>
+      </a>
+      <a href="../../media/media.html" title="Social Media">
+        <i class="fas fa-users"></i>
+      </a>
+      <a href="../../loading_screen/loading_main.html" title="main_page">
+        <i class="fas fa-chalkboard"></i>
+      </a>
+    </div>
+
+    <div class="spline-viewer">
+      <spline-viewer
+        url="https://prod.spline.design/BK83Flm76SwRJlHz/scene.splinecode"
+      ></spline-viewer>
+    </div>
+
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.animateNumber.min.js"></script>
+    <script src="js/jquery.waypoints.min.js"></script>
+    <script src="js/jquery.fancybox.min.js"></script>
+    <script src="js/jquery.sticky.js"></script>
+    <script src="js/aos.js"></script>
+    <script src="js/custom.js"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer@1.9.35/build/spline-viewer.js"
+    ></script>
+    <script src="index.js"></script>
+    <!-- Socket.io Script -->
+    <script type="text/javascript" src="socket.io/socket.io.js"></script>
+    <!-- Custom Chat Script -->
+    <script type="text/javascript" src="code.js"></script>
+
+    <!-- controle de saisr -->
+    <script>
+      document
+        .querySelector("#join-user")
+        .addEventListener("click", function (e) {
+          e.preventDefault(); // Prevent form submission
+
+          // Get input values
+          const chatroomInput = document.querySelector("#chatroom");
+          const usernameInput = document.querySelector("#username");
+          const chatroomError = document.querySelector("#chatroom-error");
+          const usernameError = document.querySelector("#username-error");
+
+          let isValid = true;
+
+          // Reset error messages
+          chatroomError.textContent = "";
+          usernameError.textContent = "";
+
+          // Validate chatroom name
+          if (chatroomInput.value.trim() === "") {
+            chatroomError.textContent = "Chatroom name is required.";
+            isValid = false;
+          } else if (chatroomInput.value.length < 3) {
+            chatroomError.textContent =
+              "Chatroom name must be at least 3 characters.";
+            isValid = false;
+          }
+
+          // Validate username
+          if (usernameInput.value.trim() === "") {
+            usernameError.textContent = "Nickname is required.";
+            isValid = false;
+          } else if (usernameInput.value.length < 3) {
+            usernameError.textContent =
+              "Nickname must be at least 3 characters.";
+            isValid = false;
+          } else if (!/^[a-zA-Z]+$/.test(usernameInput.value)) {
+            usernameError.textContent = "Nickname must contain only letters.";
+            isValid = false;
+          }
+
+          // If valid, emit event to the server
+          if (isValid) {
+            const chatroom = chatroomInput.value.trim();
+            const username = usernameInput.value.trim();
+
+            // Emit event to server
+            socket.emit("newuser", { username, chatroom });
+
+            // Switch to the chat screen
+            document.querySelector(".join-screen").classList.remove("active");
+            document.querySelector(".chat-screen").classList.add("active");
+          }
+        });
+    </script>
+    <script>
+      const gifSearchIcon = document.getElementById("gif-search-icon");
+      const gifResults = document.getElementById("gif-results");
+
+      gifSearchIcon.addEventListener("click", () => {
+        // Toggle the visibility of the GIF search section
+        gifResults.style.display =
+          gifResults.style.display === "none" || gifResults.style.display === ""
+            ? "block"
+            : "none";
+      });
+
+      // Optional: Implement the search functionality (you can integrate with a GIF API like Giphy)
+      const searchBtn = document.getElementById("search-btn");
+      const searchInput = document.getElementById("search-input");
+
+      searchBtn.addEventListener("click", () => {
+        const query = searchInput.value.trim();
+        if (query) {
+          console.log("Searching for GIFs:", query);
+          // Here you would integrate an API call to fetch the GIFs (e.g., Giphy or Tenor)
+          // For now, this is just a placeholder action.
+        }
+      });
+    </script>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <div class="cursor-ring"></div>
+
+    <div class="site-mobile-menu">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close">
+          <span class="icofont-close js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+
+    <script>
+      // Initialize the cubic cursor
+      function initCursor() {
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
+        const ring = document.querySelector(".cursor-ring");
+        const interactiveElements = document.querySelectorAll(
+          "a, button, input, .controller-icon a, .profile-block a, .site-menu li a, .btn-secondary"
+        );
+
+        let mouseX = 0,
+          mouseY = 0;
+        let posX = 0,
+          posY = 0;
+        let particleCount = 0;
+        const maxParticles = 15;
+
+        // Mouse move event
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+
+          // Position main cursor immediately
+          cursor.style.left = mouseX + "px";
+          cursor.style.top = mouseY + "px";
+
+          // Create trailing cube particles
+          if (particleCount < maxParticles && Math.random() > 0.3) {
+            createCubeParticle(mouseX, mouseY);
+            particleCount++;
+          }
+        });
+
+        // Animate follower with delay
+        function animate() {
+          // Smooth follower movement
+          posX += (mouseX - posX) / 6;
+          posY += (mouseY - posY) / 6;
+
+          follower.style.left = posX + "px";
+          follower.style.top = posY + "px";
+
+          // Ring follows with more delay
+          ring.style.left = posX + "px";
+          ring.style.top = posY + "px";
+
+          requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Create cube particle effect
+        function createCubeParticle(x, y) {
+          const particle = document.createElement("div");
+          particle.className = "cursor-particle";
+          particle.style.left = x + "px";
+          particle.style.top = y + "px";
+          document.body.appendChild(particle);
+
+          // Randomize blue shade
+          const blues = ["#0077ff", "#00aaff", "#0066cc", "#0099ff"];
+          const color = blues[Math.floor(Math.random() * blues.length)];
+          particle.style.background = color;
+          particle.style.boxShadow = `0 0 5px ${color}`;
+
+          // Animate particle
+          let size = Math.random() * 6 + 4;
+          let life = Math.random() * 1000 + 500;
+          let angle = Math.random() * Math.PI * 2;
+          let speed = Math.random() * 2 + 1;
+          let rotation = Math.random() * 360;
+
+          particle.style.width = size + "px";
+          particle.style.height = size + "px";
+          particle.style.opacity = "0.9";
+
+          let startTime = Date.now();
+
+          function updateParticle() {
+            const elapsed = Date.now() - startTime;
+            const progress = elapsed / life;
+
+            if (progress >= 1) {
+              particle.remove();
+              particleCount--;
+              return;
+            }
+
+            const moveX = Math.cos(angle) * speed * 10 * progress;
+            const moveY = Math.sin(angle) * speed * 10 * progress;
+            rotation += 2;
+
+            particle.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotation}deg)`;
+            particle.style.opacity = 0.9 * (1 - progress);
+
+            requestAnimationFrame(updateParticle);
+          }
+
+          requestAnimationFrame(updateParticle);
+        }
+
+        // Hover effects
+        interactiveElements.forEach((element) => {
+          element.addEventListener("mouseenter", () => {
+            cursor.classList.add("cursor-active");
+            follower.classList.add("cursor-follower-active");
+            ring.style.transform =
+              "translate(-50%, -50%) scale(1) rotate(45deg)";
+            ring.style.opacity = "0.7";
+
+            // Create hover particles
+            for (let i = 0; i < 3; i++) {
+              createCubeParticle(mouseX, mouseY);
+            }
+          });
+
+          element.addEventListener("mouseleave", () => {
+            cursor.classList.remove("cursor-active");
+            follower.classList.remove("cursor-follower-active");
+            ring.style.transform =
+              "translate(-50%, -50%) scale(0) rotate(45deg)";
+            ring.style.opacity = "0";
+          });
+        });
+
+        // Click effect
+        document.addEventListener("mousedown", () => {
+          cursor.classList.add("cursor-click");
+          ring.style.transform =
+            "translate(-50%, -50%) scale(1.5) rotate(45deg)";
+          ring.style.opacity = "0";
+          ring.style.borderColor = "#0077ff";
+
+          // Create click cubes
+          for (let i = 0; i < 8; i++) {
+            createCubeParticle(mouseX, mouseY);
+          }
+        });
+
+        document.addEventListener("mouseup", () => {
+          cursor.classList.remove("cursor-click");
+        });
+      }
+
+      // Initialize cursor when page loads
+      window.onload = function () {
+        initCursor();
+
+        const shadowRoot = document.querySelector("spline-viewer").shadowRoot;
+        if (shadowRoot) {
+          const logo = shadowRoot.querySelector("#logo");
+          if (logo) logo.remove();
+        }
+      };
+
+      function confirmLogout() {
+        return confirm("Are you sure you want to leave the website?");
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syncaura Games Manager</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="styleCard.css">
+    <script src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js" type="module"></script>
+    <meta name="author" content="Untree.co">
+    <link rel="shortcut icon" href="../imggg.png">
+
+    <meta name="description" content="" />
+    <meta name="keywords" content="bootstrap, bootstrap4" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Display+Playfair:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="main/css/bootstrap.min.css">
+    <link rel="stylesheet" href="main/css/animate.min.css">
+    <link rel="stylesheet" href="main/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="main/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="flaticon.css">
+    <link rel="stylesheet" href="main/style.css">
+    <link rel="stylesheet" href="../fonts/flaticon/font/flaticon.css">
+    <link rel="stylesheet" href="main/css/aos.css">
+    <link rel="stylesheet" href="main/css/style.css">
+    <link rel="stylesheet" href="main/css/stylo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+       <style>
+         /* Blue Cubic Cursor System */
+    .cursor {
+        position: fixed;
+        width: 16px;
+        height: 16px;
+        background: #0077ff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: 
+            transform 0.15s ease, 
+            width 0.2s ease, 
+            height 0.2s ease,
+            background 0.2s ease;
+        box-shadow: 0 0 10px rgba(0, 119, 255, 0.7);
+    }
+
+    .cursor-follower {
+        position: fixed;
+        width: 8px;
+        height: 8px;
+        background: #00aaff;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9998;
+        transition: transform 0.3s ease;
+        box-shadow: 0 0 8px rgba(0, 170, 255, 0.6);
+    }
+
+    .cursor-particle {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #0066cc;
+        transform: translate(-50%, -50%) rotate(45deg);
+        pointer-events: none;
+        z-index: 9997;
+        opacity: 0;
+        box-shadow: 0 0 5px rgba(0, 102, 204, 0.5);
+    }
+
+    .cursor-ring {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        border: 2px solid rgba(0, 170, 255, 0.7);
+        transform: translate(-50%, -50%) scale(0) rotate(45deg);
+        pointer-events: none;
+        z-index: 9996;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Interactive states */
+    .cursor-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #00aaff;
+        box-shadow: 0 0 15px rgba(0, 170, 255, 0.8);
+    }
+
+    .cursor-follower-active {
+        transform: translate(-50%, -50%) scale(1.5) rotate(45deg);
+        background: #0077ff;
+    }
+
+    .cursor-click {
+        transform: translate(-50%, -50%) scale(0.8) rotate(45deg);
+        background: #0066cc;
+    }
+
+    /* Hide default cursor */
+    html, body {
+        cursor: none;
+    }
+
+    /* Make sure interactive elements don't show default cursor */
+    a, button, input, [data-cursor] {
+        cursor: none !important;
+    }
+    </style>
+<style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background: black;
+        }
+
+        .spline-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .game-grid {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+
+        .game-card {
+            background: rgba(20, 20, 20, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 150, 0.5);
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff1493, #00ff6a, #1e90ff, #ff8c00);
+            background-size: 200% 200%;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.5s ease;
+            transform: scale(1.2);
+            z-index: -1;
+            border-radius: 15px;
+        }
+
+        .game-card:hover::before {
+            opacity: 0.8;
+            transform: scale(1);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover img {
+            transform: rotate(3deg) scale(1.1);
+        }
+
+        .game-card .game-info {
+            padding: 20px;
+            color: white;
+        }
+
+        .game-card .game-info h3 {
+            font-size: 24px;
+            color: #00ff6a;
+            margin: 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .game-card .game-info p {
+            font-size: 16px;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .game-card a {
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: black;
+            background: linear-gradient(45deg, #ff1493, #00ff6a, #1e90ff);
+            border-radius: 25px;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .game-card a:hover {
+            background: linear-gradient(45deg, #1e90ff, #ff1493, #00ff6a);
+            transform: scale(1.1);
+        }
+
+        /* Timer Modal Styles */
+        .timer-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            z-index: 1000;
+            text-align: center;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 255, 150, 0.5);
+            min-width: 300px;
+        }
+
+        .timer-modal h2 {
+            color: #00ff6a;
+            margin-bottom: 20px;
+        }
+
+        .timer-modal .timer {
+            font-size: 36px;
+            font-weight: bold;
+            color: #1e90ff;
+            margin: 20px 0;
+        }
+
+        .timer-modal .message {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        /* Add this to your existing style section */
+.timer-modal button {
+    margin: 20px auto 0 auto;
+    display: block;
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #00ff6a, #1e90ff);
+    color: black;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.timer-modal button:hover {
+    background: linear-gradient(45deg, #1e90ff, #00ff6a);
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 255, 150, 0.7);
+}
+
+/* Remove the inline style for the button */
+
+        .timer-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
+
+        .controller-icon {
+            position: fixed;
+            margin-bottom: 100px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: rgba(0, 123, 255, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .profile-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: transparent;
+            padding: 0;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .profile-block img {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+
+        .profile-block h2 {
+            font-size: 14px;
+            margin: 0;
+            color: #fff;
+        }
+
+        .controller-icon a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(0, 123, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .controller-icon a:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .controller-icon i {
+            color: #fff;
+            font-size: 24px;
+        }
+        
+        /* Status indicator */
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            z-index: 100;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-dot.active {
+            background: #00ff6a;
+            box-shadow: 0 0 10px #00ff6a;
+        }
+        
+        .status-dot.cooldown {
+            background: #ff1493;
+            box-shadow: 0 0 10px #ff1493;
+        }
+        
+        /* Game switch notice */
+        .game-switch-notice {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 255, 100, 0.2);
+            color: #00ff6a;
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 1px solid #00ff6a;
+            z-index: 100;
+            display: none;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Indicator -->
+    <div class="status-indicator" id="statusIndicator">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Checking status...</span>
+    </div>
+
+    <!-- Timer Modal -->
+    <div class="timer-overlay"></div>
+    <div class="timer-modal">
+        <h2>Game Timer</h2>
+        <div class="timer">00:00</div>
+        <div class="message"></div>
+        <button id="continueBtn" style="display: none;">
+            Continue Playing
+        </button>
+    </div>
+
+    <!-- Game Switch Notice -->
+    <div class="game-switch-notice" id="gameSwitchNotice">
+        Game switched! Play time continues...
+    </div>
+
+    <!-- Spline 3D Viewer -->
+    
+
+    <!-- Game Grid -->
+    <div class="game-grid">
+        <!-- Game cards will be dynamically added here -->
+    </div>
+
+    <div class="controller-icon">
+        <div class="profile-block">
+            <a href="../loading_screen/laoding_modif.html"><img src="<?php echo htmlspecialchars($profile_picture); ?>" alt="Profile Picture"></a>
+        </div>
+        <a href="games.html" title="Play Game">
+            <i class="fas fa-gamepad"></i>
+        </a>
+        <a href="../ghub/gilo.html" title="GitHub">
+            <i class="fab fa-github"></i>
+        </a>
+        <a href="../Ai/loding3.html" title="AI Chat">
+            <i class="fas fa-robot"></i>
+        </a>
+        <a href="../loading_screen/loading_editor.html" title="Code Editor">
+            <i class="fas fa-code"></i>
+        </a>
+        <a href="../media/media.html" title="Social Media">
+            <i class="fas fa-users"></i>
+        </a>
+        <a href="../loading_screen/loading_main.html" title="main_page">
+            <i class="fas fa-chalkboard"></i>
+        </a>
+    </div>
+
+    <script>
+        // Game timer system
+        const PLAY_TIME = 5 * 60; // 5 minutes in seconds (300 seconds)
+        const COOLDOWN_TIME = 25 * 60; // 25 minutes in seconds (1500 seconds)
+        let timerInterval;
+        let remainingPlayTime = 0;
+
+        // Timer elements
+        const timerModal = document.querySelector('.timer-modal');
+        const timerOverlay = document.querySelector('.timer-overlay');
+        const timerDisplay = document.querySelector('.timer');
+        const messageDisplay = document.querySelector('.message');
+        const continueBtn = document.querySelector('#continueBtn');
+        const statusIndicator = document.querySelector('#statusIndicator');
+        const statusDot = document.querySelector('#statusDot');
+        const statusText = document.querySelector('#statusText');
+        const gameSwitchNotice = document.getElementById('gameSwitchNotice');
+
+        // Game switching variables
+        let lastGameSwitchTime = 0;
+        const GAME_SWITCH_COOLDOWN = 2000; // 2 seconds between switches
+
+        // Check if there's an existing timer
+        function checkGameTimer() {
+            const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
+            const currentTime = Math.floor(Date.now() / 1000);
+
+            if (gameState.sessionEndTime) {
+                if (currentTime < gameState.sessionEndTime) {
+                    // Still in play session
+                    const remainingTime = gameState.sessionEndTime - currentTime;
+                    remainingPlayTime = remainingTime;
+                    
+                    // Update status indicator
+                    statusDot.className = 'status-dot active';
+                    statusText.textContent = `Play Time: ${formatTime(remainingTime)}`;
+                    
+                    showTimer(remainingTime, true);
+                    return true;
+                } else if (gameState.cooldownEndTime && currentTime < gameState.cooldownEndTime) {
+                    // In cooldown period
+                    const remainingCooldown = gameState.cooldownEndTime - currentTime;
+                    
+                    // Update status indicator
+                    statusDot.className = 'status-dot cooldown';
+                    statusText.textContent = `Cooldown: ${formatTime(remainingCooldown)}`;
+                    
+                    showTimer(remainingCooldown, false);
+                    return false;
+                } else {
+                    // Session and cooldown expired, reset state
+                    localStorage.removeItem('gameState');
+                    statusDot.className = 'status-dot';
+                    statusText.textContent = 'Ready to play';
+                    return true;
+                }
+            }
+            
+            // No active session
+            statusDot.className = 'status-dot';
+            statusText.textContent = 'Ready to play';
+            return true;
+        }
+
+        // Format time as MM:SS
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Start game session
+        function startGameSession() {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const gameState = {
+                sessionStartTime: currentTime,
+                sessionEndTime: currentTime + PLAY_TIME,
+                cooldownEndTime: currentTime + PLAY_TIME + COOLDOWN_TIME
+            };
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+            
+            // Update status indicator
+            statusDot.className = 'status-dot active';
+            statusText.textContent = `Play Time: ${formatTime(PLAY_TIME)}`;
+            
+            showTimer(PLAY_TIME, true);
+        }
+
+        // Show timer modal
+        function showTimer(duration, isPlayTime) {
+            timerModal.style.display = 'block';
+            timerOverlay.style.display = 'block';
+            
+            // Hide continue button by default
+            continueBtn.style.display = 'none';
+
+            if (timerInterval) clearInterval(timerInterval);
+
+            function updateTimer() {
+                const minutes = Math.floor(duration / 60);
+                const seconds = duration % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (isPlayTime) {
+                    messageDisplay.textContent = 'Game session time remaining';
+                    // Update status indicator
+                    statusText.textContent = `Play Time: ${formatTime(duration)}`;
+                } else {
+                    messageDisplay.textContent = 'Cooldown time remaining';
+                    // Update status indicator
+                    statusText.textContent = `Cooldown: ${formatTime(duration)}`;
+                }
+
+                if (duration <= 0) {
+                    clearInterval(timerInterval);
+                    if (isPlayTime) {
+                        // Play time expired, start cooldown
+                        messageDisplay.textContent = 'Your play session has ended. Cooldown period started.';
+                        
+                        // Update status indicator
+                        statusDot.className = 'status-dot cooldown';
+                        statusText.textContent = `Cooldown: ${formatTime(COOLDOWN_TIME)}`;
+                        
+                        // Show the remaining cooldown time
+                        showTimer(COOLDOWN_TIME, false);
+                    } else {
+                        // Cooldown expired
+                        localStorage.removeItem('gameState');
+                        timerModal.style.display = 'none';
+                        timerOverlay.style.display = 'none';
+                        
+                        // Update status indicator
+                        statusDot.className = 'status-dot';
+                        statusText.textContent = 'Ready to play';
+                    }
+                }
+                duration--;
+            }
+
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            // If we're in play time and the modal is shown, offer to continue
+            if (isPlayTime) {
+                continueBtn.style.display = 'block';
+                continueBtn.onclick = function() {
+                    timerModal.style.display = 'none';
+                    timerOverlay.style.display = 'none';
+                };
+            }
+        }
+
+        // Handle game card clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.game-card a')) {
+                e.preventDefault();
+                const currentTime = Date.now();
+                
+                // Prevent rapid game switching
+                if (currentTime - lastGameSwitchTime < GAME_SWITCH_COOLDOWN) {
+                    return;
+                }
+                lastGameSwitchTime = currentTime;
+                
+                const canPlay = checkGameTimer();
+                
+                if (canPlay) {
+                    // If no active session, start one
+                    const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
+                    if (!gameState.sessionEndTime || Math.floor(Date.now() / 1000) > gameState.sessionEndTime) {
+                        startGameSession();
+                    }
+                    
+                    // Show game switch notice
+                    gameSwitchNotice.style.display = 'block';
+                    setTimeout(() => {
+                        gameSwitchNotice.style.display = 'none';
+                    }, 3000);
+                    
+                    // Navigate to the game
+                    window.location.href = e.target.closest('a').href;
+                } else {
+                    // In cooldown, show timer
+                    const gameState = JSON.parse(localStorage.getItem('gameState') || '{}');
+                    const currentTime = Math.floor(Date.now() / 1000);
+                    const remainingCooldown = gameState.cooldownEndTime - currentTime;
+                    showTimer(remainingCooldown, false);
+                }
+            }
+        });
+
+        // Initialize the page
+        window.addEventListener('load', function() {
+            const canPlay = checkGameTimer();
+            
+            // If in play session, show the timer but allow them to continue
+            if (canPlay && remainingPlayTime > 0) {
+                setTimeout(() => {
+                    showTimer(remainingPlayTime, true);
+                }, 1000);
+            }
+            
+            // Load game cards
+            const games = [
+                { title: 'Speeder', image: 'Spreadsheet/im.png', link: 'speeder.html', description: 'A fast-paced racing game.' },
+                { title: 'Syncaura Mario', image: 'Spreadsheet/img.PNG', link: 'mario.html', description: 'A Mario-inspired adventure game.' },
+                { title: 'Bowling', image: 'Spreadsheet/imgg.PNG', link: 'bolling.html', description: 'A fun and realistic bowling simulator.' },
+                { title: 'Racing', image: 'Spreadsheet/imgo.PNG', link: 'racing.html', description: 'A thrilling and exciting racing experience.' },
+                { title: 'Maze', image: 'Spreadsheet/immo.PNG', link: 'maze.html', description: 'A challenging and fun maze-solving game.' },
+                { title: 'KEnnu', image: 'Spreadsheet/imp.PNG', link: 'kennu.html', description: 'Make KEnnu Happy!' }
+            ];
+
+            const gameGrid = document.querySelector('.game-grid');
+            games.forEach(game => {
+                const card = document.createElement('div');
+                card.className = 'game-card';
+                card.innerHTML = `
+                    <img src="${game.image}" alt="${game.title}">
+                    <div class="game-info">
+                        <h3>${game.title}</h3>
+                        <p>${game.description}</p>
+                        <a href="${game.link}">Play Now</a>
+                    </div>
+                `;
+                gameGrid.appendChild(card);
+            });
+
+            // Remove Spline logo if present
+            const splineViewer = document.querySelector('spline-viewer');
+            if (splineViewer) {
+                const shadowRoot = splineViewer.shadowRoot;
+                if (shadowRoot) {
+                    const logo = shadowRoot.querySelector('#logo');
+                    if (logo) logo.remove();
+                }
+            }
+        });
+        function set_timerout()
+        {
+            setTimeout(function() {
+                window.location.href = '../loading_screen/laoding_modif.html';
+            }, 10000);
+            if(logoutbtn){
+                checkGameTimer(save);
+            }
+        }
+    </script>
+    <script>
+    </script>
+      <div class="cursor"></div>
+  <div class="cursor-follower"></div>
+  <div class="cursor-ring"></div>
+
+  <div class="site-mobile-menu">
+    <div class="site-mobile-menu-header">
+      <div class="site-mobile-menu-close">
+        <span class="icofont-close js-menu-toggle"></span>
+      </div>
+    </div>
+    <div class="site-mobile-menu-body"></div>
+  </div> 
+
+
+<script>
+    // Initialize the cubic cursor
+    function initCursor() {
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+        const ring = document.querySelector('.cursor-ring');
+        const interactiveElements = document.querySelectorAll('a, button, input, .controller-icon a, .profile-block a, .site-menu li a, .btn-secondary');
+        
+        let mouseX = 0, mouseY = 0;
+        let posX = 0, posY = 0;
+        let particleCount = 0;
+        const maxParticles = 15;
+        
+        // Mouse move event
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Position main cursor immediately
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+            
+            // Create trailing cube particles
+            if (particleCount < maxParticles && Math.random() > 0.3) {
+                createCubeParticle(mouseX, mouseY);
+                particleCount++;
+            }
+        });
+        
+        // Animate follower with delay
+        function animate() {
+            // Smooth follower movement
+            posX += (mouseX - posX) / 6;
+            posY += (mouseY - posY) / 6;
+            
+            follower.style.left = posX + 'px';
+            follower.style.top = posY + 'px';
+            
+            // Ring follows with more delay
+            ring.style.left = posX + 'px';
+            ring.style.top = posY + 'px';
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+        
+        // Create cube particle effect
+        function createCubeParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'cursor-particle';
+            particle.style.left = x + 'px';
+            particle.style.top = y + 'px';
+            document.body.appendChild(particle);
+            
+            // Randomize blue shade
+            const blues = ['#0077ff', '#00aaff', '#0066cc', '#0099ff'];
+            const color = blues[Math.floor(Math.random() * blues.length)];
+            particle.style.background = color;
+            particle.style.boxShadow = `0 0 5px ${color}`;
+            
+            // Animate particle
+            let size = Math.random() * 6 + 4;
+            let life = Math.random() * 1000 + 500;
+            let angle = Math.random() * Math.PI * 2;
+            let speed = Math.random() * 2 + 1;
+            let rotation = Math.random() * 360;
+            
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.opacity = '0.9';
+            
+            let startTime = Date.now();
+            
+            function updateParticle() {
+                const elapsed = Date.now() - startTime;
+                const progress = elapsed / life;
+                
+                if (progress >= 1) {
+                    particle.remove();
+                    particleCount--;
+                    return;
+                }
+                
+                const moveX = Math.cos(angle) * speed * 10 * progress;
+                const moveY = Math.sin(angle) * speed * 10 * progress;
+                rotation += 2;
+                
+                particle.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px) rotate(${rotation}deg)`;
+                particle.style.opacity = 0.9 * (1 - progress);
+                
+                requestAnimationFrame(updateParticle);
+            }
+            
+            requestAnimationFrame(updateParticle);
+        }
+        
+        // Hover effects
+        interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                cursor.classList.add('cursor-active');
+                follower.classList.add('cursor-follower-active');
+                ring.style.transform = 'translate(-50%, -50%) scale(1) rotate(45deg)';
+                ring.style.opacity = '0.7';
+                
+                // Create hover particles
+                for (let i = 0; i < 3; i++) {
+                    createCubeParticle(mouseX, mouseY);
+                }
+            });
+            
+            element.addEventListener('mouseleave', () => {
+                cursor.classList.remove('cursor-active');
+                follower.classList.remove('cursor-follower-active');
+                ring.style.transform = 'translate(-50%, -50%) scale(0) rotate(45deg)';
+                ring.style.opacity = '0';
+            });
+        });
+        
+        // Click effect
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('cursor-click');
+            ring.style.transform = 'translate(-50%, -50%) scale(1.5) rotate(45deg)';
+            ring.style.opacity = '0';
+            ring.style.borderColor = '#0077ff';
+            
+            // Create click cubes
+            for (let i = 0; i < 8; i++) {
+                createCubeParticle(mouseX, mouseY);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('cursor-click');
+        });
+    }
+
+    // Initialize cursor when page loads
+    window.onload = function() {
+        initCursor();
+        
+        const shadowRoot = document.querySelector('spline-viewer').shadowRoot;
+        if (shadowRoot) {
+            const logo = shadowRoot.querySelector('#logo');
+            if (logo) logo.remove();
+        }
+    }
+
+    function confirmLogout() {
+        return confirm('Are you sure you want to leave the website?');
+    }
+  </script>
+
+</body>
+</html>
